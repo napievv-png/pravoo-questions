@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вопрос по правоведению</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+#question {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4e73df;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2e59d9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Ваш вопрос</h2>
+    <div id="question">Нажмите кнопку, чтобы получить вопрос</div>
+    <button id="btn" onclick="getQuestion()">Получить вопрос</button>
+</div>
+
+<script>
+
+const questions = [
+"Студент выложил платную программу в интернет без согласия автора. Какие гражданско-правовые последствия возможны?",
+"Фрилансер разработал сайт, но заказчик использует его без оплаты. Какие права есть у разработчика?",
+"Компания использовала фото из интернета без указания автора. Какие нормы нарушены?",
+"Программист создал приложение во время работы в компании. Кому принадлежат права?",
+"Блогер использовал чужую музыку без лицензии. Какая ответственность возможна?",
+"Опубликованы персональные данные без согласия человека. Какие права нарушены?",
+"Разработчик продал программу двум компаниям как «эксклюзивную». Что нарушено?",
+"Интернет-магазин отказался исполнять публичную оферту. Законно ли это?",
+"Использование пиратского ПО для заработка. Какие последствия?",
+"Программа размещена в открытом доступе, но запрещено изменение. Можно ли её модифицировать?",
+"Компания не указала условия обработки персональных данных. Что нарушено?",
+"В интернете размещена ложная информация о компании. Какие способы защиты?",
+"Программа передана без письменного договора. Кому принадлежат права?",
+"Использование чужого товарного знака в приложении. Ответственность?",
+"Сотрудник скопировал клиентскую базу перед увольнением. Какие права нарушены?"
+];
+
+// Проверяем — получал ли уже студент вопрос
+if (localStorage.getItem("gotQuestion")) {
+    document.getElementById("question").innerText = 
+        "Вы уже получили свой вопрос:\n\n" + localStorage.getItem("gotQuestion");
+    document.getElementById("btn").style.display = "none";
+}
+
+function getQuestion() {
+    const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions")) || [];
+
+    if (usedQuestions.length >= questions.length) {
+        document.getElementById("question").innerText = "Все вопросы уже разобраны.";
+        document.getElementById("btn").style.display = "none";
+        return;
+    }
+
+    let randomIndex;
+    do {
+        randomIndex = Math.floor(Math.random() * questions.length);
+    } while (usedQuestions.includes(randomIndex));
+
+    const selectedQuestion = questions[randomIndex];
+
+    usedQuestions.push(randomIndex);
+
+    localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
+    localStorage.setItem("gotQuestion", selectedQuestion);
+
+    document.getElementById("question").innerText = selectedQuestion;
+    document.getElementById("btn").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
