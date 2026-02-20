@@ -1,117 +1,575 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Вопрос по правоведению</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Киберправо — ситуационный тест</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#0b1b2c;
+      --card: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --good:#2ee59d;
+      --bad:#ff5a7a;
+      --accent:#7c9cff;
+      --shadow: 0 18px 55px rgba(0,0,0,.35);
+      --radius: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 0%, #1b2f66 0%, transparent 55%),
+        radial-gradient(1000px 700px at 85% 10%, #5a1b66 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+    .bg{
+      position:fixed; inset:0;
+      background:
+        radial-gradient(600px 400px at 50% 80%, rgba(124,156,255,.15), transparent 60%),
+        radial-gradient(500px 350px at 10% 70%, rgba(46,229,157,.10), transparent 60%),
+        radial-gradient(550px 380px at 90% 65%, rgba(255,90,122,.10), transparent 60%);
+      pointer-events:none;
+    }
+    .app{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 14px 30px;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 8px 2px;
+    }
+    .brand{ display:flex; gap:12px; align-items:center; }
+    .logo{
+      width:46px; height:46px;
+      display:grid; place-items:center;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size: 22px;
+    }
+    h1{ font-size: 18px; margin:0; letter-spacing: .2px; }
+    .sub{ margin:2px 0 0; color: var(--muted); font-size: 13px; max-width: 58ch; }
+    .stats{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      white-space:nowrap;
+    }
+    .chip b{ color:#fff; }
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4e73df, #1cc88a);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+    .card{
+      border:1px solid var(--border);
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
+    .progress{ height:10px; background: rgba(255,255,255,.05); }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(124,156,255,.9), rgba(46,229,157,.85));
+      transition: width .35s ease;
+    }
+    .content{
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    h2{ margin:0; font-size: 18px; line-height: 1.3; }
+    .case{
+      margin:0;
+      color: rgba(255,255,255,.88);
+      font-size: 14px;
+      line-height: 1.45;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.10);
+      border-radius: 14px;
+      padding: 12px 12px;
+    }
+    .hint{ margin:0; color: var(--muted); font-size: 13px; }
 
-.card {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    text-align: center;
-}
+    .options{
+      display:grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .opt{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius: 14px;
+      padding: 12px 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .opt:hover{ transform: translateY(-1px); }
+    .opt:active{ transform: translateY(0px) scale(.995); }
+    .badge{
+      width:26px; height:26px;
+      border-radius: 10px;
+      display:grid; place-items:center;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      font-weight: 800;
+      color:#fff;
+      flex: 0 0 auto;
+    }
+    .optText{ font-size: 14px; line-height: 1.25; color: rgba(255,255,255,.90); }
+    .opt.correct{ border-color: rgba(46,229,157,.55); background: rgba(46,229,157,.12); }
+    .opt.wrong{ border-color: rgba(255,90,122,.55); background: rgba(255,90,122,.12); }
 
-h2 {
-    margin-bottom: 15px;
-}
+    .feedback{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: 14px;
+      padding: 12px 12px;
+      color: rgba(255,255,255,.88);
+      font-size: 13px;
+      line-height: 1.45;
+      min-height: 52px;
+    }
+    .feedback .ok{ color: var(--good); font-weight: 800; }
+    .feedback .no{ color: var(--bad); font-weight: 800; }
 
-#question {
-    font-size: 18px;
-    margin: 20px 0;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    background-color: #4e73df;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #2e59d9;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-    <h2>Ваш вопрос</h2>
-    <div id="question">Нажмите кнопку, чтобы получить вопрос</div>
-    <button id="btn" onclick="getQuestion()">Получить вопрос</button>
-</div>
-
-<script>
-
-const questions = [
-"Студент выложил платную программу в интернет без согласия автора. Какие гражданско-правовые последствия возможны?",
-"Фрилансер разработал сайт, но заказчик использует его без оплаты. Какие права есть у разработчика?",
-"Компания использовала фото из интернета без указания автора. Какие нормы нарушены?",
-"Программист создал приложение во время работы в компании. Кому принадлежат права?",
-"Блогер использовал чужую музыку без лицензии. Какая ответственность возможна?",
-"Опубликованы персональные данные без согласия человека. Какие права нарушены?",
-"Разработчик продал программу двум компаниям как «эксклюзивную». Что нарушено?",
-"Интернет-магазин отказался исполнять публичную оферту. Законно ли это?",
-"Использование пиратского ПО для заработка. Какие последствия?",
-"Программа размещена в открытом доступе, но запрещено изменение. Можно ли её модифицировать?",
-"Компания не указала условия обработки персональных данных. Что нарушено?",
-"В интернете размещена ложная информация о компании. Какие способы защиты?",
-"Программа передана без письменного договора. Кому принадлежат права?",
-"Использование чужого товарного знака в приложении. Ответственность?",
-"Сотрудник скопировал клиентскую базу перед увольнением. Какие права нарушены?"
-];
-
-// Проверяем — получал ли уже студент вопрос
-if (localStorage.getItem("gotQuestion")) {
-    document.getElementById("question").innerText = 
-        "Вы уже получили свой вопрос:\n\n" + localStorage.getItem("gotQuestion");
-    document.getElementById("btn").style.display = "none";
-}
-
-function getQuestion() {
-    const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions")) || [];
-
-    if (usedQuestions.length >= questions.length) {
-        document.getElementById("question").innerText = "Все вопросы уже разобраны.";
-        document.getElementById("btn").style.display = "none";
-        return;
+    .actions{
+      display:flex;
+      gap: 10px;
+      justify-content:space-between;
+      margin-top: 2px;
+    }
+    button.btn{
+      border:none;
+      background: linear-gradient(90deg, rgba(124,156,255,.9), rgba(46,229,157,.85));
+      color:#06111f;
+      font-weight: 900;
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      min-width: 140px;
+    }
+    button.btn:disabled{ opacity:.45; cursor:not-allowed; }
+    button.ghost{
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      border:1px solid var(--border);
     }
 
-    let randomIndex;
-    do {
-        randomIndex = Math.floor(Math.random() * questions.length);
-    } while (usedQuestions.includes(randomIndex));
+    .hidden{ display:none; }
 
-    const selectedQuestion = questions[randomIndex];
+    .result{ margin:0; color: rgba(255,255,255,.92); font-size: 14px; line-height: 1.45; }
+    .review{ display:grid; gap: 10px; margin-top: 6px; }
+    .item{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.10);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .item b{ color:#fff; }
+    .tag{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+    }
+    .tag.good{ border-color: rgba(46,229,157,.55); }
+    .tag.bad{ border-color: rgba(255,90,122,.55); }
+    footer{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 2px 4px;
+      flex-wrap:wrap;
+    }
+    .muted{ color: var(--muted); }
 
-    usedQuestions.push(randomIndex);
+    @media (max-width:560px){
+      header{ flex-direction:column; align-items:stretch; }
+      .stats{ justify-content:flex-start; }
+      button.btn{ min-width: 0; width: 100%; }
+      .actions{ flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
 
-    localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
-    localStorage.setItem("gotQuestion", selectedQuestion);
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🛡️</div>
+        <div>
+          <h1>Киберправо — ситуационный тест</h1>
+          <p class="sub">Кейсы про взлом, утечки, вирусы и интернет-мошенничество. Выбирай правильную квалификацию и получай объяснение.</p>
+        </div>
+      </div>
 
-    document.getElementById("question").innerText = selectedQuestion;
-    document.getElementById("btn").style.display = "none";
-}
+      <div class="stats">
+        <div class="chip">Кейс: <b id="qNum">1</b>/<b id="qTotal">8</b></div>
+        <div class="chip">Баллы: <b id="score">0</b></div>
+      </div>
+    </header>
 
-</script>
+    <section class="card" id="quizCard">
+      <div class="progress"><div class="bar" id="bar"></div></div>
 
+      <div class="content">
+        <h2 id="question">Загрузка…</h2>
+
+        <p class="case" id="caseText"></p>
+
+        <p class="hint" id="hint"></p>
+
+        <div class="options" id="options"></div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+
+        <div class="actions">
+          <button class="btn ghost" id="btnReset" type="button">Сначала</button>
+          <button class="btn" id="btnNext" type="button" disabled>Дальше →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="resultCard">
+      <div class="content">
+        <h2>Итог</h2>
+        <p class="result" id="resultText"></p>
+        <div class="review" id="review"></div>
+        <div class="actions">
+          <button class="btn" id="btnRestart" type="button">Пройти ещё раз</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© Учебный тренажёр • 1 файл • работает офлайн</span>
+      <span class="muted">Подсказка: читай ситуацию внимательно — там ключевые детали</span>
+    </footer>
+  </main>
+
+  <script>
+    // ⚠️ Важно:
+    // Это учебные ситуации (без инструкций по взлому).
+    // Цель — понимание темы: незаконный доступ, вред данным, вирусы, мошенничество, персональные данные.
+
+    const CASES = [
+      {
+        title: "Кейс 1 — «Пароль друга»",
+        caseText:
+          "Студент узнал пароль одногруппника, зашёл в его аккаунт без разрешения, прочитал личные сообщения и вышел. Денег не украл, ничего не удалял.",
+        hint: "Что здесь главное: доступ был законный или нет?",
+        options: [
+          "Это не преступление, потому что вреда нет",
+          "Это незаконный доступ к компьютерной информации (взлом/доступ без разрешения)",
+          "Это создание вируса",
+          "Это интернет-мошенничество"
+        ],
+        correct: 1,
+        explain:
+          "Даже без кражи денег сам факт входа в чужой аккаунт без согласия — незаконный доступ. Вред может быть в нарушении тайны переписки и безопасности."
+      },
+      {
+        title: "Кейс 2 — «Удалил базу»",
+        caseText:
+          "Бывший сотрудник знал пароль от админ-панели. После увольнения он зашёл и удалил часть базы клиентов, чтобы 'отомстить'.",
+        hint: "Тут есть и доступ, и последствия.",
+        options: [
+          "Это обычный конфликт, решается разговором",
+          "Это незаконный доступ + уничтожение информации (тяжелее по последствиям)",
+          "Это только публикация персональных данных",
+          "Это случайная ошибка системы"
+        ],
+        correct: 1,
+        explain:
+          "Ключевое: доступ без полномочий после увольнения и умышленное уничтожение данных. Это уже серьёзный вред организации."
+      },
+      {
+        title: "Кейс 3 — «Вирус ради шутки»",
+        caseText:
+          "Подросток написал программу, которая шифрует файлы на компьютере и выводит 'Это шутка'. Он отправил её друзьям, и у одного перестали открываться документы.",
+        hint: "Даже без денег и 'шутка' — не оправдание.",
+        options: [
+          "Это безобидно, потому что хотел пошутить",
+          "Это создание/распространение вредоносного ПО (вируса)",
+          "Это просто 'плохая программа', без ответственности",
+          "Это интернет-мошенничество"
+        ],
+        correct: 1,
+        explain:
+          "Вредоносное ПО — это преступно, если наносит ущерб: блокирует доступ к данным, нарушает работу системы, уничтожает/изменяет файлы."
+      },
+      {
+        title: "Кейс 4 — «Фишинг под банк»",
+        caseText:
+          "Человек создал сайт-клон банка и рассылал ссылки: 'Подтвердите аккаунт'. Пользователи вводили логин/пароль, после чего деньги списывались.",
+        hint: "Смысл — обман ради выгоды.",
+        options: [
+          "Это интернет-мошенничество (обман через сеть)",
+          "Это законный маркетинг банка",
+          "Это просто реклама",
+          "Это только незаконный доступ без жертв"
+        ],
+        correct: 0,
+        explain:
+          "Фишинг — типичная форма интернет-мошенничества: жертву обманывают, чтобы получить доступ к деньгам или данным."
+      },
+      {
+        title: "Кейс 5 — «Слил базу в чат»",
+        caseText:
+          "Администратор группы выложил в общий чат таблицу с телефонами, адресами и паспортными данными людей без их согласия.",
+        hint: "О чём речь? О приватности и персональных данных.",
+        options: [
+          "Это нормально, если данные 'уже где-то были'",
+          "Это распространение персональных данных без разрешения",
+          "Это создание вируса",
+          "Это взлом систем"
+        ],
+        correct: 1,
+        explain:
+          "Персональные данные защищены законом. Публикация без согласия может привести к мошенничеству, шантажу и нарушению частной жизни."
+      },
+      {
+        title: "Кейс 6 — «Купил взломанный аккаунт»",
+        caseText:
+          "Человек купил доступ к чужому взломанному аккаунту в соцсети и начал писать от имени владельца.",
+        hint: "Ответственность может быть и за использование результата преступления.",
+        options: [
+          "Это не преступление: он же не взламывал",
+          "Это незаконное использование чужого аккаунта/данных (соучастие/использование)",
+          "Это защита информации",
+          "Это законная покупка цифрового товара"
+        ],
+        correct: 1,
+        explain:
+          "Даже если он не взламывал лично, он осознанно использует чужой доступ. Это может квалифицироваться как участие/содействие и незаконное использование данных."
+      },
+      {
+        title: "Кейс 7 — «Попытка взлома»",
+        caseText:
+          "Студент пытался подобрать пароль к школьной системе, но защита заблокировала его. Доступ он так и не получил.",
+        hint: "Есть ли ответственность, если не получилось?",
+        options: [
+          "Нет, потому что результат не достигнут",
+          "Да, это может быть покушение: умысел + начатые действия",
+          "Это всегда случайность",
+          "Это только дисциплинарное нарушение без вариантов"
+        ],
+        correct: 1,
+        explain:
+          "В праве есть стадия 'покушение'. Если доказан умысел и предприняты действия, ответственность возможна даже без завершённого вреда."
+      },
+      {
+        title: "Кейс 8 — «Нарушил кибербезопасность»",
+        caseText:
+          "Сотрудник компании отключил антивирус и открыл подозрительное вложение. В результате вирус повредил часть файлов. Умысла навредить не было.",
+        hint: "Здесь важно различать: умысел vs неосторожность.",
+        options: [
+          "Это всегда уголовное преступление, даже без вины",
+          "Это может быть нарушение правил/халатность (в зависимости от закона и последствий), но не всегда 'взлом'",
+          "Это интернет-мошенничество",
+          "Это распространение персональных данных"
+        ],
+        correct: 1,
+        explain:
+          "Если умысла не было, оценка зависит от норм закона и последствий: может быть дисциплинарная/административная ответственность, а уголовная — только при определённых условиях."
+      }
+    ];
+
+    let idx = 0;
+    let score = 0;
+    let answered = false;
+    const picks = []; // { picked, correct }
+
+    const elQuestion = document.getElementById("question");
+    const elCaseText = document.getElementById("caseText");
+    const elHint = document.getElementById("hint");
+    const elOptions = document.getElementById("options");
+    const elFeedback = document.getElementById("feedback");
+    const elNext = document.getElementById("btnNext");
+    const elReset = document.getElementById("btnReset");
+
+    const elQNum = document.getElementById("qNum");
+    const elQTotal = document.getElementById("qTotal");
+    const elScore = document.getElementById("score");
+    const elBar = document.getElementById("bar");
+
+    const elQuizCard = document.getElementById("quizCard");
+    const elResultCard = document.getElementById("resultCard");
+    const elResultText = document.getElementById("resultText");
+    const elReview = document.getElementById("review");
+    const elRestart = document.getElementById("btnRestart");
+
+    elQTotal.textContent = String(CASES.length);
+
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+    function letter(i){ return String.fromCharCode(65 + i); }
+
+    function render(){
+      answered = false;
+      elNext.disabled = true;
+
+      const item = CASES[idx];
+      elQuestion.textContent = item.title;
+      elCaseText.textContent = item.caseText;
+      elHint.textContent = item.hint ? ("Подсказка: " + item.hint) : "";
+
+      elFeedback.innerHTML = "Выбери вариант — и получишь объяснение (как это трактуется по теме).";
+
+      elOptions.innerHTML = "";
+      item.options.forEach((text, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "opt";
+        btn.dataset.i = String(i);
+
+        const b = document.createElement("div");
+        b.className = "badge";
+        b.textContent = letter(i);
+
+        const t = document.createElement("div");
+        t.className = "optText";
+        t.textContent = text;
+
+        btn.appendChild(b);
+        btn.appendChild(t);
+
+        btn.addEventListener("click", () => choose(i));
+        elOptions.appendChild(btn);
+      });
+
+      elQNum.textContent = String(idx + 1);
+      elScore.textContent = String(score);
+
+      const p = (idx / CASES.length) * 100;
+      elBar.style.width = `${clamp(p, 0, 100)}%`;
+
+      elResultCard.classList.add("hidden");
+      elQuizCard.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function choose(pickedIndex){
+      if (answered) return;
+      answered = true;
+
+      const item = CASES[idx];
+      const correct = pickedIndex === item.correct;
+
+      [...elOptions.children].forEach((node, i) => {
+        node.disabled = true;
+        if (i === item.correct) node.classList.add("correct");
+        if (i === pickedIndex && !correct) node.classList.add("wrong");
+      });
+
+      // Баллы: +2 за правильный, 0 за неправильный
+      if (correct) score += 2;
+
+      picks[idx] = { picked: pickedIndex, correct: item.correct };
+      elScore.textContent = String(score);
+      elNext.disabled = false;
+
+      elFeedback.innerHTML =
+        (correct
+          ? `<span class="ok">Верно!</span> +2 балла. `
+          : `<span class="no">Неверно.</span> `) +
+        `Правильный ответ: <b>${letter(item.correct)}</b>.` +
+        `<br><br><b>Почему:</b> ${item.explain}`;
+    }
+
+    function next(){
+      if (!answered) return;
+
+      idx++;
+      if (idx >= CASES.length){
+        showResult();
+        return;
+      }
+      render();
+    }
+
+    function showResult(){
+      elBar.style.width = "100%";
+
+      const maxScore = CASES.length * 2;
+      const percent = Math.round((score / maxScore) * 100);
+
+      let verdict = "Неплохо!";
+      if (percent >= 85) verdict = "Отлично!";
+      else if (percent >= 65) verdict = "Хорошо!";
+      else if (percent >= 45) verdict = "Есть база, но стоит повторить.";
+      else verdict = "Лучше повторить тему и пройти снова.";
+
+      elResultText.innerHTML =
+        `<b>${verdict}</b><br>` +
+        `Баллы: <b>${score}</b> из <b>${maxScore}</b> (${percent}%).<br>` +
+        `Ниже — разбор кейсов и правильные ответы.`;
+
+      elReview.innerHTML = "";
+      CASES.forEach((item, i) => {
+        const picked = picks[i]?.picked;
+        const correct = item.correct;
+        const ok = picked === correct;
+
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML =
+          `<span class="tag ${ok ? "good" : "bad"}">${ok ? "✔ Верно" : "✖ Ошибка"}</span>` +
+          `<b>${item.title}</b><br>` +
+          `<span class="muted">${item.caseText}</span><br><br>` +
+          `<b>Твой ответ:</b> ${picked == null ? "—" : (letter(picked) + ") " + item.options[picked])}<br>` +
+          `<b>Правильный:</b> ${letter(correct)}) ${item.options[correct]}<br>` +
+          `<br><b>Пояснение:</b> ${item.explain}`;
+        elReview.appendChild(div);
+      });
+
+      elQuizCard.classList.add("hidden");
+      elResultCard.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetAll(){
+      idx = 0;
+      score = 0;
+      picks.length = 0;
+      render();
+    }
+
+    elNext.addEventListener("click", next);
+    elReset.addEventListener("click", resetAll);
+    elRestart.addEventListener("click", resetAll);
+
+    render();
+  </script>
 </body>
 </html>
